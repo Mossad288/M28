@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love ❤️</title>
+
+<link href="https://googleapis.com" rel="stylesheet">
+
+<style>
+  :root {
+    --card-bg: rgba(255, 255, 255, 0.06);
+    --accent: #ffffff; /* تم تحويل اللون الأساسي للنصوص للأبيض */
+    --text-light: #ffffff; /* تم تحويل النصوص للون الأبيض الخالص */
+  }
+
+  body {
+    /* المزيج الجديد: أسود ملكي مدمج مع أرجواني داكن فخم */
+    background: linear-gradient(135deg, #000000, #1f0d2b, #000000); 
+    font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+    text-align: center;
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    transition: background 0.8s ease-in-out;
+  }
+
+  /* الحفاظ على نفس التدرج الفخم بعد تسجيل الدخول */
+  body.logged-in {
+    background: linear-gradient(135deg, #0d0414, #000000) !important;
+  }
+
+  .heart {
+    position: absolute;
+    color: #ff4d6d; /* الحفاظ على لون القلوب المتساقطة أحمر ليبرز فوق الخلفية الداكنة */
+    font-size: 20px;
+    animation: fall linear forwards;
+    opacity: 0.7;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+  }
+
+  .container {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 40px 25px;
+    border-radius: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    max-width: 450px;
+    width: 85%;
+    transition: all 0.5s ease-in-out;
+    z-index: 10;
+    box-sizing: border-box;
+  }
+
+  h1, h2 { 
+    font-family: 'Reem Kufi', sans-serif; 
+    margin-top: 0; 
+    color: #ffffff !important; /* جعل الكلام والتاريخ بالعلّو أبيض */
+    text-shadow: none; 
+  }
+  h1 { font-size: 2.6rem; font-weight: 700; }
+  h2 { font-size: 1.7rem; margin-bottom: 8px; font-weight: 500; }
+  
+  /* تعديل خط الفقرة السفلي ليصبح أبيض واضح */
+  p { font-size: 1.15rem; line-height: 1.7; color: #ffffff !important; font-weight: 400; }
+
+  .input-group { position: relative; max-width: 280px; margin: 25px auto; }
+  input {
+    width: 100%; padding: 15px 20px; border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px; font-size: 16px; background: rgba(0, 0, 0, 0.4);
+    color: white; outline: none; box-sizing: border-box; transition: 0.3s; text-align: center;
+    font-family: 'Cairo', sans-serif;
+  }
+  input:focus { border-color: #ff4d6d; box-shadow: 0 0 15px rgba(255, 77, 109, 0.5); }
+
+  button {
+    padding: 14px 45px; border: none; border-radius: 50px; font-size: 18px;
+    background: linear-gradient(45deg, #ff4d6d, #ff758f); color: white;
+    font-weight: bold; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 77, 109, 0.4);
+    transition: transform 0.2s;
+    font-family: 'Cairo', sans-serif;
+  }
+  button:hover { transform: scale(1.05); }
+
+  .main { display: none; opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .main.show { display: block; opacity: 1; transform: translateY(0); }
+
+  /* المربع الداخلي الخاص بالعداد أصبح باللون الأبيض */
+  .timer-container { 
+    margin: 25px 0; 
+    background: #ffffff !important; /* اللون الأبيض للمربع */
+    padding: 18px; 
+    border-radius: 20px; 
+    border: none; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* عنوان المربع الداخلي تم تعديل لونه ليظهر بوضوح فوق الأبيض */
+  .timer-title { font-size: 1rem; color: #333333 !important; margin-bottom: 12px; font-weight: 600; }
+  .countdown { display: flex; justify-content: space-around; direction: ltr; }
+  .time-box { text-align: center; flex: 1; }
+  
+  /* الأرقام داخل المربع أصبحت باللون الأسود */
+  .time-num { font-size: 1.6rem; font-weight: bold; color: #000000 !important; display: block; text-shadow: none; }
+  
+  /* تسميات الوقت (يوم، ساعة...) تم تلوينها بلون داكن لتتناسب مع المربع الأبيض */
+  .time-label { font-size: 0.8rem; color: #555555 !important; font-weight: 600; }
+
+  .music { margin-top: 25px; }
+  audio { filter: invert(1) hue-rotate(180deg) brightness(1.2); border-radius: 30px; width: 100%; max-width: 280px; }
+</style>
+</head>
+<body>
+
+<div class="container" id="card">
+  <div class="login" id="loginSection">
+    <h1>Hala ❤️</h1>
+    <p>A8laaaa Lolaaaa f el donyaa </p>
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Password">
+    </div>
+    <button onclick="openSite()">Unlock 💕</button>
+  </div>
+
+  <div class="main" id="mainSection">
+    <h2>2023/3/5 أول مرة اتكلمنا ❤️</h2>
+    <div class="timer-container">
+      <div class="timer-title">الوقت اللي عشناه سوا بقالنا:</div>
+      <div class="countdown">
+        <div class="time-box"><span class="time-num" id="seconds">00</span><span class="time-label">ثانية</span></div>
+        <div class="time-box"><span class="time-num" id="minutes">00</span><span class="time-label">دقيقة</span></div>
+        <div class="time-box"><span class="time-num" id="hours">00</span><span class="time-label">ساعة</span></div>
+        <div class="time-box"><span class="time-num" id="days">00</span><span class="time-label">يوم</span></div>
+      </div>
+    </div>
+    <p> اغلي لولاا ف الدنياا كلها وان شاء الله اشوفك احسن دكتورهه يعم ❤️</p>
+    <div class="music">
+      <audio id="bgMusic" controls loop preload="auto" src="music.mp3.mp3"></audio>
+    </div>
+  </div>
+</div>
+
+<script>
+const startDate = new Date(2023, 2, 5, 0, 0, 0); 
+
+function updateTimer() {
+  const now = new Date();
+  const diff = now - startDate;
+  const absDiff = Math.abs(diff);
+
+  const days = Math.floor(absDiff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((absDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((absDiff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((absDiff % (1000 * 60)) / 1000);
+
+  document.getElementById("days").innerText = days;
+  document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+  document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+  document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+}
+
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  const heartTypes = ["❤️", "💖", "💕", "💗", "❤"];
+  heart.innerText = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = Math.random() * 15 + 15 + "px";
+  const duration = Math.random() * 3 + 3; 
+  heart.style.animationDuration = duration + "s";
+  document.body.appendChild(heart);
+  setTimeout(() => { heart.remove(); }, duration * 1000);
+}
+setInterval(createHeart, 400);
+
+function openSite() {
+  const pass = document.getElementById("password").value;
+  const loginSection = document.getElementById("loginSection");
+  const mainSection = document.getElementById("mainSection");
+  const music = document.getElementById("bgMusic");
+
+  if (pass === "Bahbek") {
+    document.body.classList.add("logged-in");
+    loginSection.style.display = "none";
+    mainSection.classList.add("show");
+    updateTimer();
+    setInterval(updateTimer, 1000);
+    
+    setTimeout(function() {
+        music.play().catch(err => {
+            music.muted = false;
+            music.play();
+        });
+    }, 100);
+  } else {
+    alert("Wrong Password");
+  }
+}
+</script>
+</body>
+</html>
